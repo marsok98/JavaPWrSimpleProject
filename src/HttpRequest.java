@@ -12,6 +12,7 @@ import java.net.URL;
 public class HttpRequest
 {
     private static HttpURLConnection connection;
+    private ExchangeRateFromApi con;
     HttpRequest()
     {
         BufferedReader reader;
@@ -46,7 +47,7 @@ public class HttpRequest
                 }
             }
             System.out.println(responseContent.toString());
-            parse(responseContent.toString());
+            con = parse(responseContent.toString());
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -58,12 +59,13 @@ public class HttpRequest
 
 
     }
-    public static String parse(String responseBody)
+    public static ExchangeRateFromApi parse(String responseBody)
     {
         System.out.println(responseBody);
         Gson g = new Gson();
         ExchangeRateFromApi rateFromApi = g.fromJson(responseBody,ExchangeRateFromApi.class);
-        System.out.println(rateFromApi.base);
+        return rateFromApi;
+        //System.out.println(rateFromApi.base);
         /*JSONArray albums = new JSONArray(responseBody);
         for (int i = 0; i<albums.length();i++)
         {
@@ -74,6 +76,6 @@ public class HttpRequest
             System.out.println(id + " " + title + "  " + userId);
         }
         */
-        return null;
+        //return null;
     }
 }
