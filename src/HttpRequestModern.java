@@ -38,6 +38,6 @@ public class HttpRequestModern
         return rateFromApi;
         //System.out.println(rateFromApi.base);
         //System.out.println(rateFromApi.rates.get("AED"));//dostep do konkretnego obiektu w mapie javovej
-
     }
+
 }

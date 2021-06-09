@@ -12,7 +12,13 @@ import java.net.URL;
 public class HttpRequest
 {
     private static HttpURLConnection connection;
-    private ExchangeRateFromApi con;
+    private ExchangeRateFromApi currentInfoFromApi;
+    ExchangeRateFromApi getCurrentInfoFromApi()
+    {
+        return currentInfoFromApi;
+    }
+
+
     HttpRequest()
     {
         BufferedReader reader;
@@ -46,8 +52,8 @@ public class HttpRequest
                     responseContent.append(line);
                 }
             }
-            System.out.println(responseContent.toString());
-            con = parse(responseContent.toString());
+            currentInfoFromApi = parse(responseContent.toString());
+
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
