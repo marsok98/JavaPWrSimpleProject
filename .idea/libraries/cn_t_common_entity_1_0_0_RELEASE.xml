@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="cn.t:common-entity:1.0.0.RELEASE" type="repository">
+    <properties maven-id="cn.t:common-entity:1.0.0.RELEASE" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/common-entity-1.0.0.RELEASE.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

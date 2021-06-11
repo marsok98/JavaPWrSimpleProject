@@ -1,4 +1,10 @@
+
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
@@ -6,11 +12,22 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+
+
+
 public class GUI
 {
+
     ExchangeRateFromApi currentRate;
-    JList<  Map<String, BigDecimal> > listCurrency = new JList<>();
-    DefaultListModel<   Map<String, BigDecimal> > model = new DefaultListModel<>();
+    DefaultTableModel model = new DefaultTableModel();
+    JTable listCurrency = new JTable(model);
+    JScrollPane scrollPane = new JScrollPane(listCurrency);
+    //DefaultListModel<   Map<String, BigDecimal> > model = new DefaultListModel<>();
+
+
+    DefaultTableModel dataBaseModel = new DefaultTableModel();
+    JTable dataBaseTable = new JTable(dataBaseModel);
+    JScrollPane scrollPane2 = new JScrollPane(dataBaseTable);
 
     JFrame mainFrame = new JFrame();
     JButton btnGetDataFromApi = new JButton();//full
@@ -74,7 +91,8 @@ public class GUI
         mainFrame.add(btnDoExchange);
         mainFrame.add(btnSaveToDatabase);
 
-        mainFrame.add(listCurrency);
+        mainFrame.add(scrollPane);
+        mainFrame.add(scrollPane2);
         mainFrame.add(fieldToWriteCurrency);
         mainFrame.add(fieldToShowRate);
         mainFrame.add(fieldToWriteAmount);
@@ -108,8 +126,12 @@ public class GUI
     }
     void createLists()
     {
-        listCurrency.setBounds(50,250,100,200);
+        model.addColumn("Key");
+        model.addColumn("Value");
+        listCurrency.setBounds(20,250,140,200);
         listCurrency.setVisible(true);
+        scrollPane.setVisible(true);
+        scrollPane.setBounds(20,250,140,200);
     }
     void createButtons()
     {
@@ -122,6 +144,7 @@ public class GUI
             @Override
             public void actionPerformed(ActionEvent e) {
                 getDataFromApi();
+                fillJList();
             }
         });
 
@@ -156,28 +179,41 @@ public class GUI
     //to nie dziala
     void fillJList()
     {
-        listCurrency.setModel(model);
+
         for (Map.Entry<String, BigDecimal> entry : currentRate.rates.entrySet())
         {
             String key = entry.getKey();
-            BigDecimal value = entry.getValue();
-
+            String value = entry.getValue().toString();
+            model.addRow(new Object[]{key,value});
         }
+        listCurrency.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listCurrency.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                String key = listCurrency.getValueAt(listCurrency.getSelectedRow(), 0).toString();
+                String Value= listCurrency.getValueAt(listCurrency.getSelectedRow(), 1).toString();
+                fieldToWriteCurrency.setText(key);
+                fieldToShowRate.setText(Value);
+
+            }
+        });
 
     }
 
     void doExchange()
     {
+        try {
         String currencyInString = fieldToWriteCurrency.getText();
         BigDecimal rate = currentRate.rates.get(currencyInString.toUpperCase(Locale.ROOT));
         fieldToShowRate.setText(rate.toString());
 
         String writtenAmountInString = fieldToWriteAmount.getText();
-        int amount = Integer.parseInt(writtenAmountInString);
-
-        Double result  = rate.doubleValue() * amount;
-        fieldToShowResult.setText(result.toString());
-
+            int amount = Integer.parseInt(writtenAmountInString);
+            Double result = rate.doubleValue() * amount;
+            fieldToShowResult.setText(result.toString());
+        }catch (Exception e){
+            fieldToWriteAmount.setText("0");
+            fieldToShowResult.setText("0");
+        }
     }
-
 }

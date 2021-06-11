@@ -25,5 +25,8 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="com.google.code.gson:gson:2.8.7" level="project" />
+    <orderEntry type="library" name="org.json:json:20210307" level="project" />
+    <orderEntry type="library" name="cn.t:common-entity:1.0.0.RELEASE" level="project" />
   </component>
 </module>
